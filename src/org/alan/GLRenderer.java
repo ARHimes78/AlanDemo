@@ -7,6 +7,7 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import com.sun.opengl.util.GLUT;
 import java.nio.FloatBuffer;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,9 +30,11 @@ public class GLRenderer implements GLEventListener {
     private int rotation;
     
     private boolean lightOn = true;
-    
     private boolean stop;
+    
     private float[] rgb;
+    
+    private LocalTime time;
     
     // Planet demo lighting globals
     FloatBuffer lightEmission;
@@ -40,6 +43,9 @@ public class GLRenderer implements GLEventListener {
     FloatBuffer lightDiffuseWhite;
     FloatBuffer sunLightPosition;
     FloatBuffer lightZero;
+    
+    FloatBuffer redColor;
+    FloatBuffer blackColor;
     
     public GLRenderer(AlanDemo frame){
         this.frame = frame;
@@ -50,7 +56,6 @@ public class GLRenderer implements GLEventListener {
         horizontalSpeed = 0;
         rotation = 0;
         stop = true;
-        
     }
     
     public void init(GLAutoDrawable drawable) {
@@ -68,9 +73,7 @@ public class GLRenderer implements GLEventListener {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
         
-        //The sun in demo 7 moved the light source of other demos to the center. 
-        //Called in display(), also.
-        gl = setLight(gl);
+        gl = setLight(setColors(gl));
         
         // Planet demo lighting
        	float matEmission[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -85,6 +88,11 @@ public class GLRenderer implements GLEventListener {
 	lightDiffuseWhite = FloatBuffer.wrap(matDiffuseWhite);
 	sunLightPosition = FloatBuffer.wrap(matSunLightPosition);
 	lightZero = FloatBuffer.wrap(matLightZero);
+        
+        float red[] = { 1.0f, 0.0f, 0.0f, 1.0f};
+        float black[] = { 0.0f, 0.0f, 0.0f, 1.0f};
+        redColor = FloatBuffer.wrap(red);
+        blackColor = FloatBuffer.wrap(black);
         
         gl.glClearColor (0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel (GL.GL_SMOOTH);
@@ -114,13 +122,7 @@ public class GLRenderer implements GLEventListener {
         
         gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);
-        gl.glDisable(GL.GL_DEPTH_TEST);      
-        
-        //Colors being affected by other demos.
-        float defaultColor[] = {0.8f, 0.8f, 0.8f, 1.0f};
-        gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, FloatBuffer.wrap(defaultColor));
-        
-        gl = setLight(gl);
+        gl.glDisable(GL.GL_DEPTH_TEST);
         
         // Clear the drawing area
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -129,7 +131,10 @@ public class GLRenderer implements GLEventListener {
 
         // Move the "drawing cursor" around
         gl.glTranslatef(-1.5f, 0.0f, -6.0f);
-
+        
+        //Colors and light being affected by other demos.
+        gl = setLight(setColors(gl));
+        
         gl.glRotatef(frame.rotateX, 1.0f, 0.0f, 0.0f);
         gl.glRotatef(frame.rotateY, 0.0f, 1.0f, 0.0f);
 
@@ -257,18 +262,53 @@ public class GLRenderer implements GLEventListener {
         gl.glEnable(GL.GL_LIGHT0);
         gl.glEnable(GL.GL_DEPTH_TEST);
         
+        
+        
+        float hour = (float)LocalTime.now().getHour();
+        float minute = (float)LocalTime.now().getMinute();
+        float second = (float)LocalTime.now().getSecond();
+        
+        //Markers for hours on the clock.
         gl.glPushMatrix();
-        gl.glTranslatef(1.5f, -0.5f, 0.0f);
+        gl.glTranslatef(1.5f, 2.0f, -0.4f);
+        glut.glutSolidCube(0.2f);
+        gl.glTranslatef(2.0f, -2.0f, 0.0f);
+        glut.glutSolidCube(0.2f);
+        gl.glTranslatef(-2.0f, -2.0f, 0.0f);
+        glut.glutSolidCube(0.2f);
+        gl.glTranslatef(-2.0f, 2.0f, 0.0f);
+        glut.glutSolidCube(0.2f);
+        gl.glPopMatrix();
+        
+        //hour
+        gl.glPushMatrix();
+        gl.glTranslatef(1.5f, 0.0f, -0.3f);
         gl.glRotatef(-90f, 1.0f, 0.0f, 0.0f);
-//        gl.glPopMatrix();
-//        
-//        gl.glPushMatrix();
-//        if (frame.frames % 30 == 0) {
-//            rotation = rotation + 6;
-//            System.out.println(""+rotation);
-//            gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
-//        }
-        glut.glutSolidCone(0.2f, 2.0f, 100, 80);
+        gl.glRotatef(hour*30f, 0.0f, 1.0f, 0.0f);
+        glut.glutSolidCone(0.2f, 1.5f, 20, 16);
+        gl.glPopMatrix();
+        
+        //minute
+        gl.glPushMatrix();
+        gl.glTranslatef(1.5f, 0.0f, -0.2f);
+        gl.glRotatef(-90f, 1.0f, 0.0f, 0.0f);
+        gl.glRotatef(minute*6f, 0.0f, 1.0f, 0.0f);
+        glut.glutSolidCone(0.2f, 2.0f, 20, 16);
+        gl.glPopMatrix();
+        
+        //second
+        gl.glPushMatrix();
+        gl.glTranslatef(1.5f, 0.0f, -0.1f);
+        gl.glRotatef(-90f, 1.0f, 0.0f, 0.0f);
+        gl.glRotatef(second*6f, 0.0f, 1.0f, 0.0f);
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, redColor);
+        glut.glutSolidCone(0.1f, 2.0f, 10, 8);
+        gl.glPopMatrix();
+        
+        gl.glPushMatrix();
+        gl.glTranslatef(1.5f, 0.0f, 0.0f);
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, blackColor);
+        glut.glutSolidSphere(0.2f, 20, 16);
         gl.glPopMatrix();
     }
 
@@ -437,6 +477,13 @@ public class GLRenderer implements GLEventListener {
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_SPECULAR, lightSpecular);
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_SHININESS, lightShininess);
         gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightPosition);
+        
+        return gl;
+    }
+    
+    private GL setColors(GL gl){
+        float defaultColor[] = {0.8f, 0.8f, 0.8f, 1.0f};
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, FloatBuffer.wrap(defaultColor));
         
         return gl;
     }

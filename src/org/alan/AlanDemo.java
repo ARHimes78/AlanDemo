@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.opengl.GLCanvas;
@@ -230,11 +232,6 @@ public class AlanDemo extends JFrame {
 
         demoButtonGroup.add(demo7RadioButton);
         demo7RadioButton.setText("7");
-        demo7RadioButton.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent evt) {
-                demo7RadioButtonStateChanged(evt);
-            }
-        });
         demo7RadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 demo7RadioButtonActionPerformed(evt);
@@ -381,10 +378,6 @@ public class AlanDemo extends JFrame {
 
     }//GEN-LAST:event_demo2RadioButtonStateChanged
 
-    private void demo7RadioButtonStateChanged(ChangeEvent evt) {//GEN-FIRST:event_demo7RadioButtonStateChanged
-        
-    }//GEN-LAST:event_demo7RadioButtonStateChanged
-
     /**
      * Called from within initComponents().
      * hint: to customize the generated code choose 'Customize Code' in the contextmenu
@@ -444,6 +437,7 @@ public class AlanDemo extends JFrame {
     public void setColorSliders(ColorSliders colorSliders) {
         this.colorSliders = colorSliders;
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private GLCanvas canvas;
     private JRadioButton demo2RadioButton;
