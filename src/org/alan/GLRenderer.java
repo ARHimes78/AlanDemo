@@ -7,6 +7,8 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import com.sun.opengl.util.GLUT;
 import java.nio.FloatBuffer;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * GLRenderer.java <BR>
@@ -25,10 +27,11 @@ public class GLRenderer implements GLEventListener {
     private int verticalSpeed;
     private int horizontalSpeed;
     private int rotation;
+    
+    private boolean lightOn = true;
+    
     private boolean stop;
     private float[] rgb;
-
-    private boolean lightOn = true;
     
     // Planet demo lighting globals
     FloatBuffer lightEmission;
@@ -53,8 +56,9 @@ public class GLRenderer implements GLEventListener {
     public void init(GLAutoDrawable drawable) {
         // Use debug pipeline
         // drawable.setGL(new DebugGL(drawable.getGL()));
-
+        
         GL gl = drawable.getGL();
+        
         System.err.println("INIT GL IS: " + gl.getClass().getName());
 
         // Enable VSync
@@ -64,13 +68,9 @@ public class GLRenderer implements GLEventListener {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
         
-        // Lighting
-        float mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-        float mat_shininess[] = { 50.0f };
-        float light_position[] = { 1.0f, 1.0f, 1.0f, 0.0f };
-        FloatBuffer lightSpecular = FloatBuffer.wrap(mat_specular);
-        FloatBuffer lightShininess = FloatBuffer.wrap(mat_shininess);
-        FloatBuffer lightPosition = FloatBuffer.wrap(light_position);
+        //The sun in demo 7 moved the light source of other demos to the center. 
+        //Called in display(), also.
+        gl = setLight(gl);
         
         // Planet demo lighting
        	float matEmission[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -88,10 +88,6 @@ public class GLRenderer implements GLEventListener {
         
         gl.glClearColor (0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel (GL.GL_SMOOTH);
-
-        gl.glMaterialfv(GL.GL_FRONT, GL.GL_SPECULAR, lightSpecular);
-        gl.glMaterialfv(GL.GL_FRONT, GL.GL_SHININESS, lightShininess);
-        gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightPosition);
     }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -115,10 +111,17 @@ public class GLRenderer implements GLEventListener {
         update();
         
         GL gl = drawable.getGL();
+        
         gl.glDisable(GL.GL_LIGHTING);
         gl.glDisable(GL.GL_LIGHT0);
-        gl.glDisable(GL.GL_DEPTH_TEST);        
-
+        gl.glDisable(GL.GL_DEPTH_TEST);      
+        
+        //Colors being affected by other demos.
+        float defaultColor[] = {0.8f, 0.8f, 0.8f, 1.0f};
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, FloatBuffer.wrap(defaultColor));
+        
+        gl = setLight(gl);
+        
         // Clear the drawing area
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         // Reset the current matrix to the "identity"
@@ -250,6 +253,23 @@ public class GLRenderer implements GLEventListener {
     }
 
     private void demo3(GL gl){
+        gl.glEnable(GL.GL_LIGHTING);
+        gl.glEnable(GL.GL_LIGHT0);
+        gl.glEnable(GL.GL_DEPTH_TEST);
+        
+        gl.glPushMatrix();
+        gl.glTranslatef(1.5f, -0.5f, 0.0f);
+        gl.glRotatef(-90f, 1.0f, 0.0f, 0.0f);
+//        gl.glPopMatrix();
+//        
+//        gl.glPushMatrix();
+//        if (frame.frames % 30 == 0) {
+//            rotation = rotation + 6;
+//            System.out.println(""+rotation);
+//            gl.glRotatef(rotation, 0.0f, 1.0f, 0.0f);
+//        }
+        glut.glutSolidCone(0.2f, 2.0f, 100, 80);
+        gl.glPopMatrix();
     }
 
     private void demo4(GL gl){
@@ -305,9 +325,10 @@ public class GLRenderer implements GLEventListener {
         float rot180 = 360 * (frame.secs / 2.0f - (float)Math.floor(frame.secs)); // 180 degrees per second
         float rot90 = 360 * (frame.secs / 4.0f - (float)Math.floor(frame.secs)); // 90 degrees per second
         float rot45 = 360 * (frame.secs / 8.0f - (float)Math.floor(frame.secs)); // 45 degrees per second
-
+        
         gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, sunLightPosition);
         gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_CUTOFF, 180.0f);
+        
 
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_EMISSION, lightEmission);
         glut.glutSolidSphere(0.75, 50, 45);   // draw sun
@@ -404,6 +425,20 @@ public class GLRenderer implements GLEventListener {
     //For radio button 2
     public float[] getRGB() {
         return rgb;
+    }
+    
+    private GL setLight(GL gl) {
+        float mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        float mat_shininess[] = { 50.0f };
+        float light_position[] = { 1.0f, 1.0f, 1.0f, 0.0f };
+        FloatBuffer lightSpecular = FloatBuffer.wrap(mat_specular);
+        FloatBuffer lightShininess = FloatBuffer.wrap(mat_shininess);
+        FloatBuffer lightPosition = FloatBuffer.wrap(light_position);
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_SPECULAR, lightSpecular);
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_SHININESS, lightShininess);
+        gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightPosition);
+        
+        return gl;
     }
 }
 

@@ -259,6 +259,7 @@
         <Property name="text" type="java.lang.String" value="7"/>
       </Properties>
       <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="demo7RadioButtonStateChanged"/>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="demo7RadioButtonActionPerformed"/>
       </Events>
     </Component>

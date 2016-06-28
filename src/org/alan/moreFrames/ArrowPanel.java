@@ -5,6 +5,7 @@
  */
 package org.alan.moreFrames;
 
+import javax.swing.JCheckBox;
 import org.alan.AlanDemo;
 import org.alan.GLRenderer;
 
@@ -178,6 +179,11 @@ public class ArrowPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //So the AlanDemo frame can uncheck the checkbox when radio button 2 is deselected.
+    public JCheckBox getChkBoxColors() {
+        return chkBoxColors;
+    }
+
     private void buttonUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpActionPerformed
         arrowButton(UP);
     }//GEN-LAST:event_buttonUpActionPerformed
@@ -206,12 +212,7 @@ public class ArrowPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonStopContinueActionPerformed
 
     private void buttonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetActionPerformed
-        renderer.reset();
-        
-        labelVert.setText("V: " + 0);
-        labelHoz.setText("H: " + 0);
-        
-        userIgnoredTheContinueButton();
+        reset();
     }//GEN-LAST:event_buttonResetActionPerformed
 
     private void chkBoxColorsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chkBoxColorsStateChanged
@@ -265,6 +266,15 @@ public class ArrowPanel extends javax.swing.JFrame {
     private void userIgnoredTheContinueButton() {
         go = true;
         buttonStopContinue.setText("stop");
+    }
+    
+    public void reset() {
+        renderer.reset();
+        
+        labelVert.setText("V: " + 0);
+        labelHoz.setText("H: " + 0);
+        
+        userIgnoredTheContinueButton();
     }
     
     public GLRenderer getRenderer() {

@@ -230,6 +230,11 @@ public class AlanDemo extends JFrame {
 
         demoButtonGroup.add(demo7RadioButton);
         demo7RadioButton.setText("7");
+        demo7RadioButton.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
+                demo7RadioButtonStateChanged(evt);
+            }
+        });
         demo7RadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 demo7RadioButtonActionPerformed(evt);
@@ -371,7 +376,14 @@ public class AlanDemo extends JFrame {
 
     private void demo2RadioButtonStateChanged(ChangeEvent evt) {//GEN-FIRST:event_demo2RadioButtonStateChanged
         arrowPanel.setVisible(demo2RadioButton.isSelected());
+        arrowPanel.reset();
+        arrowPanel.getChkBoxColors().setSelected(false);
+
     }//GEN-LAST:event_demo2RadioButtonStateChanged
+
+    private void demo7RadioButtonStateChanged(ChangeEvent evt) {//GEN-FIRST:event_demo7RadioButtonStateChanged
+        
+    }//GEN-LAST:event_demo7RadioButtonStateChanged
 
     /**
      * Called from within initComponents().
