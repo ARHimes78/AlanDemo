@@ -346,6 +346,7 @@ public class GLRenderer implements GLEventListener {
         
         animFrames++;
         
+        //Made the explosion slightly brighter
         gl.glScalef(0.99f, 0.99f, 0.99f);
         
         //supernova explosion
@@ -386,7 +387,146 @@ public class GLRenderer implements GLEventListener {
 
     //Written by Alan Himes
     private void demo5(GL gl){
+        gl.glEnable(GL.GL_LIGHTING);
+        gl.glEnable(GL.GL_LIGHT0);
+        gl.glEnable(GL.GL_DEPTH_TEST);
+        
+        gl = setLight(gl,
+                1.0f, 1.0f, 1.0f, 0.0f,
+                128f, 1.6f, 2.0f, 4.0f, 0.0f);
+        
+        gl.glTranslatef(1.5f, 0.0f, 0.0f);
+        
+        //head
+        gl.glPushMatrix();
+        gl = setColors(gl, 1.0f, 0.8f, 0.6f);
+        gl.glScalef(1.0f, 1.6f, 1.2f);
+        glut.glutSolidSphere(1.0f, 100, 100);
+        gl.glPopMatrix();
+        
+        //left ear (viewer's "right")
+        gl.glPushMatrix();
+        gl = setColors(gl, 1.0f, 0.8f, 0.6f);
+        gl.glTranslatef(1.0f, 0.1f, 0.0f);
+        gl.glScalef(1.0f, 2.0f, 1.2f);
+        gl.glRotatef(90f, 0.5f, 1.0f, 0.0f);
+        //glut.glutSolidSphere(0.12f, 20, 20);
+        glut.glutSolidTorus(0.10f, 0.08f, 20, 20);
+        gl.glPopMatrix();
+        
+        //right ear
+        gl.glPushMatrix();
+        gl = setColors(gl, 1.0f, 0.8f, 0.6f);
+        gl.glTranslatef(-1.0f, 0.1f, 0.0f);
+        gl.glScalef(1.0f, 2.0f, 1.2f);
+        gl.glRotatef(90f, -0.5f, 1.0f, 0.0f);
+        //glut.glutSolidSphere(0.12f, 20, 20);
+        glut.glutSolidTorus(0.10f, 0.08f, 20, 20);
+        gl.glPopMatrix();
+        
+        //nose
+        gl.glPushMatrix();
+        gl = setColors(gl, 1.0f, 0.8f, 0.6f);
+        gl.glTranslatef(0.0f, -0.3f, 1.3f);
+        gl.glScalef(1.5f, 1.0f, 1.5f);
+        gl.glRotatef(-105f, 1.0f, 0.0f, 0.0f);        
+        glut.glutSolidCone(0.1f, 0.8f, 10, 10);
+        gl.glPopMatrix();
+        
+        //upper lip
+        gl.glPushMatrix();
+        gl = setColors(gl, 1.0f, 0.8f, 0.6f);
+        gl.glTranslatef(0.0f, -0.4f, 0.9f);
+        gl.glScalef(1.9f, 1.0f, 1.0f);
+        gl.glRotatef(45f, 0.0f, 1.0f, 0.0f);
+        glut.glutSolidCube(0.4f);
+        gl.glPopMatrix();
+        
+        //bottom lip
+        gl.glPushMatrix();
+        gl = setColors(gl, 1.0f, 0.8f, 0.6f);
+        gl.glTranslatef(0.0f, -0.6f, 0.93f);
+        gl.glScalef(1.2f, 1.0f, 1.0f);
+        gl.glRotatef(90f, 1.0f, 0.0f, 0.0f);
+        glut.glutSolidTorus(0.1d, 0.1d, 50, 50);
+        gl.glPopMatrix();
+        
+        //chin
+        gl.glPushMatrix();
+        gl = setColors(gl, 1.0f, 0.8f, 0.6f);
+        gl.glTranslatef(0.0f, -1.0f, 0.85f);
+        gl.glScalef(3.0f, 2.0f, 1.0f);
+        //gl.glRotatef(90f, 1.0f, 0.0f, 0.0f);
+        glut.glutSolidSphere(0.1f, 20, 20);
+        gl.glPopMatrix();
+        
+        //neck
+        gl.glPushMatrix();
+        gl = setColors(gl, 1.0f, 0.8f, 0.6f);
+        gl.glTranslatef(0.0f, -1.8f, -0.3f);
+        gl.glScalef(1.0f, 1.5f, 1.5f);
+        gl.glRotatef(-90f, 1.0f, 0.0f, 0.0f);
+        glut.glutSolidCylinder(0.6f, 1.0f, 50, 50);
+        gl.glPopMatrix();
+        
+        //hair
+        gl.glPushMatrix();
+        gl = setColors(gl, 0.4f, 0.3f, 0.0f);
+        gl.glTranslatef(0.0f, 0.0f, -0.5f);
+        gl.glScalef(1.2f, 1.5f, 1.0f);
+        glut.glutSolidSphere(1.0f, 50, 50);
+        gl.glPopMatrix();
+        
+        //hair 2
+        gl.glPushMatrix();
+        gl = setColors(gl, 0.4f, 0.3f, 0.0f);
+        gl.glTranslatef(0.0f, 1.0f, -0.3f);
+        gl.glScalef(1.45f, 2.0f, 1.5f);
+        gl.glRotatef(-30f, 1.0f, 0.0f, 0.0f);
+        glut.glutSolidSphere(0.8f, 50, 50);
+        gl.glPopMatrix();
+        
+        //eyebrow
+        gl.glPushMatrix();
+        gl = setColors(gl, 0.4f, 0.3f, 0.0f);
+        gl.glTranslatef(-0.5f, 0.25f, 1.05f);
+        gl.glRotatef(90f, 0.0f, 1.0f, 0.0f);
+        glut.glutSolidCylinder(0.15f, 1.0f, 20, 20);
+        gl.glPopMatrix();
+        
+        //sideburns
+        gl.glPushMatrix();
+        gl = setColors(gl, 0.4f, 0.3f, 0.0f);
+        gl.glTranslatef(0.9f, 0.3f, 0.15f);
+        gl.glScalef(1.0f, 4.0f, 1.0f);
+        gl.glRotatef(45f, 1.0f, 0.0f, 0.0f);
+        glut.glutSolidCylinder(0.1f, 0.3f, 20, 20);
+        gl.glTranslatef(-1.8f, 0.0f, 0.0f);
+        glut.glutSolidCylinder(0.1f, 0.3f, 20, 20);
+        gl.glPopMatrix();
+        
+        //eyes
+        gl.glPushMatrix();
+        gl = setColors(gl, 1.0f, 0.9f, 0.9f);
+        gl.glTranslatef(0.2f, 0.1f, 1.1f);
+        gl.glScalef(2.0f, 1.0f, 1.0f);
+        glut.glutSolidSphere(0.1f, 50, 50);
+        gl.glTranslatef(-0.2f, 0.0f, 0.0f);
+        glut.glutSolidSphere(0.1f, 50, 50);
+        gl.glPopMatrix();
+        
+        //pupils
+        gl.glPushMatrix();
+        gl = setColors(gl, 0.0f, 0.0f, 0.0f);
+        gl.glTranslatef(-0.0f, 0.0f, 0.0f);
+        gl.glTranslatef(0.25f, 0.1f, 1.15f);
+        glut.glutSolidSphere(0.08f, 50, 50);
+        gl.glTranslatef(-0.48f, 0.0f, 0.0f);
+        glut.glutSolidSphere(0.08f, 50, 50);
+        gl.glPopMatrix();
     }
+    
+    
 
     //Written by Richard Himes
     private void demo6(GL gl){
