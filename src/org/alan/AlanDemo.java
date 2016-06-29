@@ -149,6 +149,9 @@ public class AlanDemo extends JFrame {
 
         label.setText("Below you see a GLCanvas");
 
+        canvas.setName(""); // NOI18N
+        canvas.setRealized(false);
+
         rotateYSlider.setMaximum(90);
         rotateYSlider.setMinimum(-90);
         rotateYSlider.setValue(0);
@@ -166,6 +169,7 @@ public class AlanDemo extends JFrame {
 
         demoButtonGroup.add(demo2RadioButton);
         demo2RadioButton.setText("2");
+        demo2RadioButton.setRolloverEnabled(false);
         demo2RadioButton.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent evt) {
                 demo2RadioButtonStateChanged(evt);
@@ -179,6 +183,7 @@ public class AlanDemo extends JFrame {
 
         demoButtonGroup.add(demo3RadioButton);
         demo3RadioButton.setText("3");
+        demo3RadioButton.setRolloverEnabled(false);
         demo3RadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 demo3RadioButtonActionPerformed(evt);
@@ -187,6 +192,12 @@ public class AlanDemo extends JFrame {
 
         demoButtonGroup.add(demo4RadioButton);
         demo4RadioButton.setText("4");
+        demo4RadioButton.setRolloverEnabled(false);
+        demo4RadioButton.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
+                demo4RadioButtonStateChanged(evt);
+            }
+        });
         demo4RadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 demo4RadioButtonActionPerformed(evt);
@@ -195,6 +206,7 @@ public class AlanDemo extends JFrame {
 
         demoButtonGroup.add(demo5RadioButton);
         demo5RadioButton.setText("5");
+        demo5RadioButton.setRolloverEnabled(false);
         demo5RadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 demo5RadioButtonActionPerformed(evt);
@@ -204,6 +216,7 @@ public class AlanDemo extends JFrame {
         demoButtonGroup.add(demo2RadioButton1);
         demo2RadioButton1.setSelected(true);
         demo2RadioButton1.setText("1");
+        demo2RadioButton1.setRolloverEnabled(false);
         demo2RadioButton1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 demo1RadioButtonActionPerformed(evt);
@@ -212,6 +225,7 @@ public class AlanDemo extends JFrame {
 
         demoButtonGroup.add(demo6RadioButton);
         demo6RadioButton.setText("6");
+        demo6RadioButton.setRolloverEnabled(false);
         demo6RadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 demo6RadioButtonActionPerformed(evt);
@@ -237,6 +251,7 @@ public class AlanDemo extends JFrame {
 
         demoButtonGroup.add(demo7RadioButton);
         demo7RadioButton.setText("7");
+        demo7RadioButton.setRolloverEnabled(false);
         demo7RadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 demo7RadioButtonActionPerformed(evt);
@@ -382,6 +397,10 @@ public class AlanDemo extends JFrame {
         arrowPanel.getChkBoxColors().setSelected(false);
 
     }//GEN-LAST:event_demo2RadioButtonStateChanged
+
+    private void demo4RadioButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_demo4RadioButtonStateChanged
+        renderer.resetAnimFrames();
+    }//GEN-LAST:event_demo4RadioButtonStateChanged
 
     /**
      * Called from within initComponents().

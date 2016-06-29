@@ -7,12 +7,12 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import com.sun.opengl.util.GLUT;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.nio.FloatBuffer;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
+import javafx.scene.paint.Color;
 import javax.media.opengl.GLCanvas;
 
 /**
@@ -32,10 +32,12 @@ public class GLRenderer implements GLEventListener {
     private int verticalSpeed;
     private int horizontalSpeed;
     private int rotation;
+    private int animFrames;
     
     private boolean lightOn = true;
     private boolean stop;
-    
+    private boolean sizeFlip;
+        
     private float[] rgb;
     
     private LocalTime time;
@@ -61,7 +63,9 @@ public class GLRenderer implements GLEventListener {
         verticalSpeed = 0;
         horizontalSpeed = 0;
         rotation = 0;
+        animFrames = 0;
         stop = true;
+        sizeFlip = false;
     }
     
     public void init(GLAutoDrawable drawable) {
@@ -98,7 +102,7 @@ public class GLRenderer implements GLEventListener {
         float red[] = { 1.0f, 0.0f, 0.0f, 1.0f};
         float black[] = { 0.0f, 0.0f, 0.0f, 1.0f};
         float frontLight[] = { 0.0f, 0.0f, 10.0f };
-        float clockShine[] = { 10.0f, };
+        float clockShine[] = { 100.0f, };
         redColor = FloatBuffer.wrap(red);
         blackColor = FloatBuffer.wrap(black);
         clockLight = FloatBuffer.wrap(frontLight);
@@ -336,9 +340,48 @@ public class GLRenderer implements GLEventListener {
 
     //Written by Alan Himes
     private void demo4(GL gl){
-//        GLCanvas canvas = frame.getCanvas();
-//        canvas.setBackground(Color.RED);
-//        frame.setCanvas(canvas);
+        gl.glEnable(GL.GL_LIGHTING);
+        gl.glEnable(GL.GL_LIGHT0);
+        gl.glEnable(GL.GL_DEPTH_TEST);
+        
+        animFrames++;
+        
+        gl.glScalef(0.99f, 0.99f, 0.99f);
+        
+        //supernova explosion
+        gl.glPushMatrix();
+        gl.glTranslatef(1.5f, 0.0f, -10.0f);
+        
+        gl = setLight(setColors(gl, fade(animFrames), fade(animFrames), fade(animFrames)), 
+                fade(animFrames), fade(animFrames)/2, fade(animFrames)/4, fade(animFrames), 
+                128 - fade(animFrames)*128, 0.0f, 0.0f, 10f-(fade(animFrames)*10), 0.2f); 
+        
+        glut.glutSolidSphere(10f-(fade(animFrames)*10), 100, 100);
+        gl.glPopMatrix();
+        
+        //Teapot
+        gl.glPushMatrix();
+        gl.glTranslatef(1.5f, 0.0f, -10.0f);
+        gl.glRotatef((float)(animFrames%100), -1.0f, 0.0f, 0.5f);
+        gl = setLight(setColors(gl, 1.0f, 0.5f, 0.25f), 1.0f, 1.0f, 1.0f, 1.0f, 64f, 0.0f, 1.0f, 1.0f, 0.0f);
+        glut.glutSolidTeapot(1.5f);
+        gl.glPopMatrix();
+        
+        //exploding pieces of teapot
+        gl.glPushMatrix();
+        gl.glTranslatef(1.5f, 0.0f, -10.0f);
+        
+        //This sets the color of the debris pieces and places another light source inside the explosion
+        gl = setLight(setColors(gl, 1.0f, 0.5f, 0.25f), 1.0f, 1.0f, 1.0f, 1.0f, 64f, 0.0f, 0.0f, -10f, 0.0f);
+        
+        //28,800 pieces per second
+        for (int i = 0; i<12; i++) {
+            for (int j = 1; j<11; j++) {
+                gl = boom(gl, (float)j/100*.9f);
+            }
+            gl.glRotatef((float)(i*30), 0.0f, 0.0f, 1.0f);
+        }
+        gl.glPopMatrix();
     }
 
     //Written by Alan Himes
@@ -398,7 +441,6 @@ public class GLRenderer implements GLEventListener {
         gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, sunLightPosition);
         gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_CUTOFF, 180.0f);
         
-
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_EMISSION, lightEmission);
         glut.glutSolidSphere(0.75, 50, 45);   // draw sun
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_EMISSION, lightZero);
@@ -496,6 +538,52 @@ public class GLRenderer implements GLEventListener {
         return rgb;
     }
     
+    //For radio button 4
+    public void resetAnimFrames(){
+        animFrames = 0;
+    }
+    
+    //For radio button 4
+    private float fade(int frame){
+        float alphaValue = 1.0f-((float)frame%100/100);
+        return alphaValue;
+    };
+    
+    //For radio button 4
+    private GL flyingPiece(GL gl, int frame, float x, float y, float z){
+        gl.glTranslatef((float)(frame%100)*x,(float)(frame%100)*y,(float)(frame%100)*z);
+        gl.glRotatef(15f, 1f, 0.2f, 1f);//Aims the debris spew at the camera
+        gl.glPushMatrix();
+        gl.glRotatef((float)((animFrames*10) % 360), 0.0f, 1.0f, 0.0f);
+        gl.glRotatef((float)((animFrames*10) % 360), 1.0f, 1.0f, 0.0f);
+        
+        //Making different sized pieces
+        if (sizeFlip) {
+            gl.glScalef(0.1f, 0.1f, 0.1f);
+        }
+        else {
+            gl.glScalef(0.05f, 0.05f, 0.05f);
+        }
+        sizeFlip = ! sizeFlip;
+        
+        glut.glutSolidTetrahedron();
+        gl.glPopMatrix();
+        return gl;
+    }
+    
+    private GL boom(GL gl, float debrisDirection){
+        gl = flyingPiece(gl, animFrames, -debrisDirection, -debrisDirection, debrisDirection);
+        gl = flyingPiece(gl, animFrames, debrisDirection, -debrisDirection, -debrisDirection);
+        gl = flyingPiece(gl, animFrames, -debrisDirection, debrisDirection, -debrisDirection);
+        gl = flyingPiece(gl, animFrames, debrisDirection, -debrisDirection, debrisDirection);
+        gl = flyingPiece(gl, animFrames, -debrisDirection, debrisDirection, debrisDirection);
+        gl = flyingPiece(gl, animFrames, debrisDirection, debrisDirection, -debrisDirection);
+        gl = flyingPiece(gl, animFrames, debrisDirection, debrisDirection, debrisDirection);
+        gl = flyingPiece(gl, animFrames, -debrisDirection, -debrisDirection, -debrisDirection);
+        
+        return gl;
+    }
+    
     private GL setLight(GL gl) {
         float mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
         float mat_shininess[] = { 50.0f };
@@ -510,10 +598,30 @@ public class GLRenderer implements GLEventListener {
         return gl;
     }
     
+    private GL setLight(GL gl, float secR, float secG, float secB, float secA, 
+        float shine, float lightX, float lightY, float lightZ, float posDirectional) {
+        float mat_specular[] = { secR, secG, secB, secA };
+        float mat_shininess[] = { shine };
+        float light_position[] = { lightX, lightY, lightZ, posDirectional };
+        FloatBuffer lightSpecular = FloatBuffer.wrap(mat_specular);
+        FloatBuffer lightShininess = FloatBuffer.wrap(mat_shininess);
+        FloatBuffer lightPosition = FloatBuffer.wrap(light_position);
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_SPECULAR, lightSpecular);
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_SHININESS, lightShininess);
+        gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightPosition);
+        
+        return gl;
+    }
+    
     private GL setColors(GL gl){
         float defaultColor[] = {0.8f, 0.8f, 0.8f, 1.0f};
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, FloatBuffer.wrap(defaultColor));
-        
+        return gl;
+    }
+    
+    private GL setColors(GL gl, float red, float green, float blue){
+        float color[] = {red, green, blue, 1.0f};
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, FloatBuffer.wrap(color));
         return gl;
     }
 }
