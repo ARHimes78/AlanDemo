@@ -30,9 +30,7 @@ public class ArrowPanel extends javax.swing.JFrame {
     public ArrowPanel(AlanDemo frame) {
         initComponents();
         
-        this.setLocation(800, 0);
         setTitle("Rotation");
-        setResizable(false);
         
         this.frame = frame;
         renderer = frame.getRenderer();
@@ -63,6 +61,8 @@ public class ArrowPanel extends javax.swing.JFrame {
         chkBoxColors = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(1132, 0));
+        setResizable(false);
 
         buttonDown.setText("down");
         buttonDown.addActionListener(new java.awt.event.ActionListener() {

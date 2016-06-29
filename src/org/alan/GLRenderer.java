@@ -6,10 +6,14 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import com.sun.opengl.util.GLUT;
+
+import java.awt.Color;
+import java.awt.Dimension;
 import java.nio.FloatBuffer;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.media.opengl.GLCanvas;
 
 /**
  * GLRenderer.java <BR>
@@ -46,6 +50,8 @@ public class GLRenderer implements GLEventListener {
     
     FloatBuffer redColor;
     FloatBuffer blackColor;
+    FloatBuffer clockLight;
+    FloatBuffer clockShininess;
     
     public GLRenderer(AlanDemo frame){
         this.frame = frame;
@@ -91,8 +97,12 @@ public class GLRenderer implements GLEventListener {
         
         float red[] = { 1.0f, 0.0f, 0.0f, 1.0f};
         float black[] = { 0.0f, 0.0f, 0.0f, 1.0f};
+        float frontLight[] = { 0.0f, 0.0f, 10.0f };
+        float clockShine[] = { 10.0f, };
         redColor = FloatBuffer.wrap(red);
         blackColor = FloatBuffer.wrap(black);
+        clockLight = FloatBuffer.wrap(frontLight);
+        clockShininess = FloatBuffer.wrap(clockShine);
         
         gl.glClearColor (0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel (GL.GL_SMOOTH);
@@ -117,6 +127,14 @@ public class GLRenderer implements GLEventListener {
 
     public void display(GLAutoDrawable drawable) {
         update();
+        
+//        code for resizing canvas if flickering with each modifcation of frame (like seconds ticking) could be resolved.
+//        Dimension dim = frame.getSize();
+//        dim.width = (int)((float)dim.width*.95);
+//        dim.height = (int)((float)dim.width*.51749271137026239067055393586006);
+//        GLCanvas canvas = frame.getCanvas();
+//        canvas.setSize(dim);
+//        frame.setCanvas(canvas);
         
         GL gl = drawable.getGL();
         
@@ -171,6 +189,7 @@ public class GLRenderer implements GLEventListener {
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
     }
     
+    //Modified by Alan Himes
     private void demo1(GL gl){
         if ((int)frame.secs % 2 == 0) {  
             // Move the "drawing cursor" to another position
@@ -228,7 +247,8 @@ public class GLRenderer implements GLEventListener {
         }
 
     }
-
+    
+    //Written by Alan Himes
     private void demo2(GL gl){
         if (!stop)
             rotation++;
@@ -257,12 +277,14 @@ public class GLRenderer implements GLEventListener {
         gl.glPopMatrix();
     }
 
+    //Written by Alan Himes
     private void demo3(GL gl){
         gl.glEnable(GL.GL_LIGHTING);
         gl.glEnable(GL.GL_LIGHT0);
         gl.glEnable(GL.GL_DEPTH_TEST);
         
-        
+        gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, clockLight);
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_SHININESS, clockShininess);
         
         float hour = (float)LocalTime.now().getHour();
         float minute = (float)LocalTime.now().getMinute();
@@ -312,12 +334,18 @@ public class GLRenderer implements GLEventListener {
         gl.glPopMatrix();
     }
 
+    //Written by Alan Himes
     private void demo4(GL gl){
+//        GLCanvas canvas = frame.getCanvas();
+//        canvas.setBackground(Color.RED);
+//        frame.setCanvas(canvas);
     }
 
+    //Written by Alan Himes
     private void demo5(GL gl){
     }
 
+    //Written by Richard Himes
     private void demo6(GL gl){
         if((int)frame.secs % 3 == 0 && frame.frames % frame.FPS == 0){
             lightOn = lightOn?false:true;
@@ -355,6 +383,7 @@ public class GLRenderer implements GLEventListener {
 
     }
 
+    //Written by Richard Himes
     private void demo7(GL gl){
         gl.glEnable(GL.GL_LIGHTING);
         gl.glEnable(GL.GL_LIGHT0);

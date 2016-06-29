@@ -17,9 +17,7 @@ public class ColorSliders extends javax.swing.JFrame {
     public ColorSliders(ArrowPanel panel) {
         initComponents();
         setVisible(false);
-        setLocation(800, 450);
         setTitle("The Slider Show");
-        setResizable(false);
         
         this.panel = panel;
     }
@@ -38,6 +36,8 @@ public class ColorSliders extends javax.swing.JFrame {
         sliderRed = new javax.swing.JSlider();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(1101, 444));
+        setResizable(false);
 
         sliderGreen.setBackground(new java.awt.Color(0, 240, 0));
         sliderGreen.setEnabled(false);

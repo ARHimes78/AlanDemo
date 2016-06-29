@@ -10,6 +10,7 @@ import org.alan.moreFrames.ArrowPanel;
 import org.alan.moreFrames.ColorSliders;
 import com.sun.opengl.util.Animator;
 import com.sun.opengl.util.FPSAnimator;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -66,7 +67,6 @@ public class AlanDemo extends JFrame {
     public AlanDemo() {
         initComponents();
         setTitle("Alan Demo");
-        setResizable(false);
         
         rYLabel.setText(Integer.toString(rotateY));
 
@@ -79,6 +79,8 @@ public class AlanDemo extends JFrame {
 
         // This is a workaround for the GLCanvas not adjusting its size, when the frame is resized.
         canvas.setMinimumSize(new Dimension());
+        
+        
         
         arrowPanel = new ArrowPanel(this);
         colorSliders = new ColorSliders(arrowPanel);
@@ -141,6 +143,9 @@ public class AlanDemo extends JFrame {
         demo7RadioButton = new JRadioButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(1082, 788));
+        setResizable(false);
+        setSize(new Dimension(1082, 788));
 
         label.setText("Below you see a GLCanvas");
 
@@ -262,7 +267,7 @@ public class AlanDemo extends JFrame {
                         .addComponent(label))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(canvas, GroupLayout.PREFERRED_SIZE, 686, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(canvas, GroupLayout.PREFERRED_SIZE, 1029, GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(197, 197, 197)
                         .addComponent(jLabel2)
@@ -291,8 +296,8 @@ public class AlanDemo extends JFrame {
                 .addContainerGap()
                 .addComponent(label)
                 .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(canvas, GroupLayout.PREFERRED_SIZE, 355, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addComponent(canvas, GroupLayout.PREFERRED_SIZE, 533, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addComponent(rotateXSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
@@ -436,6 +441,14 @@ public class AlanDemo extends JFrame {
 
     public void setColorSliders(ColorSliders colorSliders) {
         this.colorSliders = colorSliders;
+    }
+
+    public GLCanvas getCanvas() {
+        return canvas;
+    }
+
+    public void setCanvas(GLCanvas canvas) {
+        this.canvas = canvas;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
