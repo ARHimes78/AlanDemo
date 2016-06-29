@@ -132,14 +132,6 @@ public class GLRenderer implements GLEventListener {
     public void display(GLAutoDrawable drawable) {
         update();
         
-//        code for resizing canvas if flickering with each modifcation of frame (like seconds ticking) could be resolved.
-//        Dimension dim = frame.getSize();
-//        dim.width = (int)((float)dim.width*.95);
-//        dim.height = (int)((float)dim.width*.51749271137026239067055393586006);
-//        GLCanvas canvas = frame.getCanvas();
-//        canvas.setSize(dim);
-//        frame.setCanvas(canvas);
-        
         GL gl = drawable.getGL();
         
         gl.glDisable(GL.GL_LIGHTING);
@@ -393,7 +385,7 @@ public class GLRenderer implements GLEventListener {
         
         gl = setLight(gl,
                 1.0f, 1.0f, 1.0f, 0.0f,
-                128f, 1.6f, 2.0f, 4.0f, 0.0f);
+                128f, -1.6f, 2.0f, 4.0f, 0.0f);
         
         gl.glTranslatef(1.5f, 0.0f, 0.0f);
         
